@@ -12,9 +12,9 @@ echo Start Wi-Fi DUMP gate
 
 ################## INTERFACE INITIALIZATION #################
 #iw dev
-sudo iw phy phy0 interface add mon0 type monitor
-sudo iw dev wlxe0469aa531bc del
-sudo ifconfig mon0 up
+#sudo iw phy phy0 interface add mon0 type monitor
+#sudo iw dev wlxe0469aa531bc del
+#sudo ifconfig mon0 up
 
 
 finished=0
@@ -37,6 +37,8 @@ while ! ((finished))
 	tshark -S -l -i mon0 -Y 'wlan.fc.type_subtype eq 4' \
 	-T fields -e frame.time -e wlan.ta_resolved -e wlan.sa -e wlan_radio.signal_dbm -e wlan.ssid \
 	-E separator="|" -a duration:$timeout > $path_full
+
+	python parse_dump.py $path_full 
 done
 ####### END #######
 
